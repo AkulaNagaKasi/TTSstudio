@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Text to Speech</title>
+  <link rel="stylesheet" href="/styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+  <nav>
+        <a href="#" >TTS App</a>
+          <a href="#">Home</a>
+          <a href="#" >Features</a>
+          <a href="#" >Pricing</a>
+          <a href="#" >Contact</a>
+  </nav>
+  <div class="container">
+    <h1>Convert Text to Speech</h1>
+
+    <form action="/convert" method="POST" enctype="multipart/form-data" id="convertForm">
+      <div class="input-container">
+        <textarea 
+          name="textInput" 
+          class="text-input" 
+          placeholder="Enter your text here or attach a text file..."
+          id="textInput"
+        ></textarea>
+        
+        <div class="file-input-container">
+          <label class="file-input-label">
+            <svg class="pin-icon" viewBox="0 0 24 24">
+              <path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66l-9.2 9.19a2 2 0 01-2.83-2.83l8.49-8.48"></path>
+            </svg>
+            <input 
+              type="file" 
+              name="file" 
+              class="file-input" 
+              accept=".txt"
+              id="fileInput"
+            >
+          </label>
+          <div class="file-name" id="fileName"></div>
+        </div>
+      </div>
+      <!-- <label>Select Gender:</label><br>
+<input type="radio" id="male" name="gender" value="male" checked>
+<label for="male">Male</label>
+
+<input type="radio" id="female" name="gender" value="female">
+<label for="female">Female</label><br> -->
+      <label for="voice">Select Voice:</label>
+      <select name="voice" id="voice">
+          <option value="en">English (US)</option>
+          <option value="en-uk">English (UK)</option>
+          <option value="en-au">English (Australia)</option>
+          <option value="hi">Hindi</option>
+          <option value="fr">French</option>
+          <option value="es">Spanish</option>
+      </select><br>
+      <button type="submit" class="submit-btn">Convert to Speech</button>
+    </form>
+ 
+    <div class="preview-container" id="previewContainer" style="display: none;">
+      <div class="preview-content">
+        <audio id="audioPreview" controls class="audio-player"></audio>
+        <button class="download-btn" id="downloadBtn">
+          <svg class="download-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M5 20h14"></path>
+            <path d="M12 3v12"></path>
+            <path d="M6 12l6 6 6-6"></path>
+          </svg>
+          
+          Download MP3
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const fileInput = document.getElementById('fileInput');
+    const textInput = document.getElementById('textInput');
+    const fileName = document.getElementById('fileName');
+    const form = document.getElementById('convertForm');
+    const previewContainer = document.getElementById('previewContainer');
+    const audioPreview = document.getElementById('audioPreview');
+    const downloadBtn = document.getElementById('downloadBtn');
+
+    fileInput.addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      if (file) {
+        fileName.textContent = file.name;
+        
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          textInput.value = e.target.result;
+        };
+        reader.readAsText(file);
+      }
+    });
+
+    form.addEventListener('submit', async function(e) {
+      e.preventDefault();
+      
+      try {
+        const formData = new FormData(this);
+        
+        const response = await fetch('/convert', {
+          method: 'POST',
+          body: formData
+        });
+
+        if (!response.ok) throw new Error('Conversion failed');
+
+        const blob = await response.blob();
+        const audioUrl = URL.createObjectURL(blob);
+        
+        // Update audio preview
+        audioPreview.src = audioUrl;
+        previewContainer.style.display = 'block';
+        
+        // Setup download button
+        downloadBtn.onclick = () => {
+          const a = document.createElement('a');
+          a.href = audioUrl;
+          a.download = 'speech.mp3';
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+        };
+
+      } catch (error) {
+        console.error('Error:', error);
+        alert('Error converting text to speech');
+      }
+    });
+  </script>
+    <!-- <footer>
+      <div class="footer-container">
+          <p>&copy; 2025 TTS App. All rights reserved.</p>
+          <div class="footer-links">
+              <a href="#">Privacy Policy</a>
+              <a href="#">Terms of Service</a>
+              <a href="#">Contact</a>
+          </div>
+      </div>
+  </footer> -->
+</body>
+</html>
