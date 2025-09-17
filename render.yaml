@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: voicecraft
+    env: node
+    rootDir: VoiceCraft
+    plan: free
+    autoDeploy: true
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /
+    disks:
+      - name: audio-disk
+        mountPath: /opt/render/project/src/public/audio
+        sizeGB: 2
+      - name: uploads-disk
+        mountPath: /opt/render/project/src/uploads
+        sizeGB: 1
