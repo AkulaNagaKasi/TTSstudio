@@ -4,7 +4,8 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "start": "node server.js",
+    "voices": "node -e \"(async()=>{const e=require('edge-tts');console.log(await e.listVoices())})()\""
   },
   "author": "",
   "license": "ISC",
@@ -15,6 +16,7 @@
     "express": "^4.21.2",
     "gtts": "^0.2.1",
     "mongoose": "^8.9.3",
-    "multer": "^1.4.5-lts.1"
+    "multer": "^1.4.5-lts.1",
+    "edge-tts": "^7.0.1"
   }
 }

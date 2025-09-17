@@ -4,78 +4,252 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Text to Speech</title>
-  <link rel="stylesheet" href="/styles.css">
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    
+    .floating-bg {
+      position: absolute;
+      border-radius: 50%;
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(147, 51, 234, 0.1));
+      animation: float 6s ease-in-out infinite;
+    }
+    
+    .floating-bg:nth-child(1) {
+      width: 300px;
+      height: 300px;
+      top: 10%;
+      right: 10%;
+      animation-delay: 0s;
+    }
+    
+    .floating-bg:nth-child(2) {
+      width: 200px;
+      height: 200px;
+      bottom: 20%;
+      left: 15%;
+      animation-delay: 2s;
+    }
+    
+    .floating-bg:nth-child(3) {
+      width: 150px;
+      height: 150px;
+      top: 50%;
+      left: 80%;
+      animation-delay: 4s;
+    }
+    
+    @keyframes float {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-20px) rotate(180deg); }
+    }
+    
+    .glass-effect {
+      background: rgba(255, 255, 255, 0.25);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+    }
+    
+    .gradient-text {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    .pulse-glow {
+      animation: pulseGlow 2s ease-in-out infinite alternate;
+    }
+    
+    @keyframes pulseGlow {
+      from { box-shadow: 0 0 20px rgba(59, 130, 246, 0.4); }
+      to { box-shadow: 0 0 30px rgba(59, 130, 246, 0.6), 0 0 40px rgba(147, 51, 234, 0.3); }
+    }
+    
+    .hover-lift {
+      transition: all 0.3s ease;
+    }
+    
+    .hover-lift:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    }
+  </style>
 </head>
-<body>
-  <nav>
-        <a href="#" >TTS App</a>
-          <a href="#">Home</a>
-          <a href="#" >Features</a>
-          <a href="#" >Pricing</a>
-          <a href="#" >Contact</a>
-  </nav>
-  <div class="container">
-    <h1>Convert Text to Speech</h1>
-
-    <form action="/convert" method="POST" enctype="multipart/form-data" id="convertForm">
-      <div class="input-container">
-        <textarea 
-          name="textInput" 
-          class="text-input" 
-          placeholder="Enter your text here or attach a text file..."
-          id="textInput"
-        ></textarea>
-        
-        <div class="file-input-container">
-          <label class="file-input-label">
-            <svg class="pin-icon" viewBox="0 0 24 24">
-              <path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66l-9.2 9.19a2 2 0 01-2.83-2.83l8.49-8.48"></path>
+<body class="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 relative overflow-x-hidden">
+  <!-- Floating Background Elements -->
+  <div class="floating-bg"></div>
+  <div class="floating-bg"></div>
+  <div class="floating-bg"></div>
+  
+  <!-- Navigation -->
+  <nav class="relative z-10 glass-effect border-b border-white/20">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center py-4">
+        <div class="flex items-center space-x-3">
+          <!-- Enhanced Logo -->
+          <div class="flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-r from-blue-500 to-purple-600 shadow-lg">
+            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path>
             </svg>
-            <input 
-              type="file" 
-              name="file" 
-              class="file-input" 
-              accept=".txt"
-              id="fileInput"
-            >
-          </label>
-          <div class="file-name" id="fileName"></div>
+          </div>
+          <span class="text-xl font-bold gradient-text">TTS Studio</span>
+        </div>
+        <div class="hidden md:flex space-x-8">
+          <a href="#" class="text-gray-700 hover:text-blue-600 font-medium transition-colors">Home</a>
+          <a href="#" class="text-gray-700 hover:text-blue-600 font-medium transition-colors">Features</a>
+          <a href="#" class="text-gray-700 hover:text-blue-600 font-medium transition-colors">Pricing</a>
+          <a href="#" class="text-gray-700 hover:text-blue-600 font-medium transition-colors">Contact</a>
         </div>
       </div>
-      <!-- <label>Select Gender:</label><br>
-<input type="radio" id="male" name="gender" value="male" checked>
-<label for="male">Male</label>
+    </div>
+  </nav>
 
-<input type="radio" id="female" name="gender" value="female">
-<label for="female">Female</label><br> -->
-      <label for="voice">Select Voice:</label>
-      <select name="voice" id="voice">
-          <option value="en">English (US)</option>
-          <option value="en-uk">English (UK)</option>
-          <option value="en-au">English (Australia)</option>
-          <option value="hi">Hindi</option>
-          <option value="fr">French</option>
-          <option value="es">Spanish</option>
-      </select><br>
-      <button type="submit" class="submit-btn">Convert to Speech</button>
+  <div class="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <!-- Header -->
+    <div class="text-center mb-12">
+      <h1 class="text-5xl font-bold gradient-text mb-4">Convert Text to Speech</h1>
+      <p class="text-xl text-gray-600 max-w-2xl mx-auto">Transform your written content into natural-sounding speech with our advanced AI-powered text-to-speech technology.</p>
+    </div>
+
+    <!-- Main Form -->
+    <form action="javascript:void(0)" method="POST" enctype="multipart/form-data" id="convertForm" class="space-y-8" onsubmit="return false;">
+      <div class="glass-effect rounded-2xl p-8 shadow-xl hover-lift">
+        <div class="input-container space-y-6">
+          <!-- Text Input -->
+          <div class="relative">
+            <label class="block text-sm font-semibold text-gray-700 mb-3">Your Text Content</label>
+            <textarea 
+              name="textInput" 
+              class="w-full h-48 px-6 py-4 bg-white/80 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-200 resize-none text-gray-700 placeholder-gray-400"
+              placeholder="Enter your text here or attach a text file..."
+              id="textInput"
+            ></textarea>
+          </div>
+          
+          <!-- File Input -->
+          <div class="file-input-container">
+            <label class="flex items-center justify-center w-full py-4 px-6 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-xl cursor-pointer hover:from-blue-600 hover:to-purple-700 transition-all duration-200 shadow-lg hover:shadow-xl">
+              <svg class="w-5 h-5 mr-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66l-9.2 9.19a2 2 0 01-2.83-2.83l8.49-8.48"></path>
+              </svg>
+              <span class="font-medium">Attach Text File</span>
+              <input 
+                type="file" 
+                name="file" 
+                class="hidden" 
+                accept=".txt"
+                id="fileInput"
+              >
+            </label>
+            <div class="mt-3 text-sm text-gray-600 text-center" id="fileName"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Engine Selection -->
+      <div class="glass-effect rounded-2xl p-6 shadow-xl hover-lift">
+        <label for="engine" class="block text-sm font-semibold text-gray-700 mb-4">Choose Speech Engine</label>
+        <select name="engine" id="engine" class="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-200 text-gray-700">
+          <option value="gtts" selected>GTTS - Google Text-to-Speech (Free, reliable)</option>
+          <option value="edge">Microsoft Edge - Neural Voices (Free, high quality)</option>
+        </select>
+      </div>
+
+      <!-- Submit Button -->
+      <div class="text-center">
+        <button type="submit" class="px-12 py-4 bg-gradient-to-r from-blue-600 to-purple-700 text-white font-semibold rounded-xl hover:from-blue-700 hover:to-purple-800 transition-all duration-200 shadow-lg hover:shadow-xl pulse-glow text-lg">
+          🎵 Convert to Speech
+        </button>
+      </div>
     </form>
  
-    <div class="preview-container" id="previewContainer" style="display: none;">
-      <div class="preview-content">
-        <audio id="audioPreview" controls class="audio-player"></audio>
-        <button class="download-btn" id="downloadBtn">
-          <svg class="download-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M5 20h14"></path>
-            <path d="M12 3v12"></path>
-            <path d="M6 12l6 6 6-6"></path>
-          </svg>
-          
-          Download MP3
-        </button>
+    <!-- Audio Preview Section -->
+    <div class="preview-container mt-12" id="previewContainer" style="display: none;">
+      <div class="glass-effect rounded-2xl p-8 shadow-xl hover-lift">
+        <h3 class="text-2xl font-bold text-center mb-6 gradient-text">Your Audio is Ready! 🎉</h3>
+        <div class="preview-content space-y-6">
+          <div class="flex justify-center">
+            <audio id="audioPreview" controls class="w-full max-w-md rounded-xl shadow-lg bg-white/50 p-4"></audio>
+          </div>
+          <div class="text-center">
+            <button class="px-8 py-3 bg-gradient-to-r from-green-500 to-blue-600 text-white font-semibold rounded-xl hover:from-green-600 hover:to-blue-700 transition-all duration-200 shadow-lg hover:shadow-xl inline-flex items-center space-x-2" id="downloadBtn">
+              <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M5 20h14"></path>
+                <path d="M12 3v12"></path>
+                <path d="M6 12l6 6 6-6"></path>
+              </svg>
+              <span>Download MP3</span>
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   </div>
+
+  <!-- Enhanced Instructions Section -->
+  <section class="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+    <div class="text-center mb-12">
+      <h2 class="text-4xl font-bold gradient-text mb-4">How to Use TTS Studio</h2>
+      <p class="text-lg text-gray-600">Follow these simple steps to convert your text to high-quality speech</p>
+    </div>
+    
+    <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+      <!-- Step 1 -->
+      <div class="howto-card group">
+        <div class="glass-effect rounded-2xl p-8 text-center hover-lift h-full border-2 border-transparent hover:border-blue-200 transition-all duration-300">
+          <div class="w-16 h-16 mx-auto mb-6 bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
+            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path>
+            </svg>
+          </div>
+          <h3 class="text-xl font-bold text-gray-800 mb-4">1. Enter Text</h3>
+          <p class="text-gray-600 leading-relaxed">Type or paste your text into the input box. You can also upload a .txt file for convenience.</p>
+        </div>
+      </div>
+
+      <!-- Step 2 -->
+      <div class="howto-card group">
+        <div class="glass-effect rounded-2xl p-8 text-center hover-lift h-full border-2 border-transparent hover:border-purple-200 transition-all duration-300">
+          <div class="w-16 h-16 mx-auto mb-6 bg-gradient-to-r from-purple-500 to-pink-600 rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
+            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+            </svg>
+          </div>
+          <h3 class="text-xl font-bold text-gray-800 mb-4">2. Pick Engine</h3>
+          <p class="text-gray-600 leading-relaxed">Choose between GTTS for simplicity or Microsoft Edge for premium neural voices with natural prosody.</p>
+        </div>
+      </div>
+
+      <!-- Step 3 -->
+      <div class="howto-card group">
+        <div class="glass-effect rounded-2xl p-8 text-center hover-lift h-full border-2 border-transparent hover:border-green-200 transition-all duration-300">
+          <div class="w-16 h-16 mx-auto mb-6 bg-gradient-to-r from-green-500 to-teal-600 rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
+            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+            </svg>
+          </div>
+          <h3 class="text-xl font-bold text-gray-800 mb-4">3. Convert</h3>
+          <p class="text-gray-600 leading-relaxed">Click the convert button to generate your speech. Preview and download your audio file instantly.</p>
+        </div>
+      </div>
+
+      <!-- Step 4 -->
+      <div class="howto-card group">
+        <div class="glass-effect rounded-2xl p-8 text-center hover-lift h-full border-2 border-transparent hover:border-yellow-200 transition-all duration-300">
+          <div class="w-16 h-16 mx-auto mb-6 bg-gradient-to-r from-yellow-500 to-orange-600 rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
+            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+            </svg>
+          </div>
+          <h3 class="text-xl font-bold text-gray-800 mb-4">Pro Tips</h3>
+          <p class="text-gray-600 leading-relaxed">Use proper punctuation for better prosody. Split long texts into paragraphs for optimal results.</p>
+        </div>
+      </div>
+    </div>
+  </section>
 
   <script>
     const fileInput = document.getElementById('fileInput');
@@ -85,11 +259,13 @@
     const previewContainer = document.getElementById('previewContainer');
     const audioPreview = document.getElementById('audioPreview');
     const downloadBtn = document.getElementById('downloadBtn');
+    const engineSelect = document.getElementById('engine');
 
     fileInput.addEventListener('change', function(e) {
       const file = e.target.files[0];
       if (file) {
-        fileName.textContent = file.name;
+        fileName.textContent = `📎 ${file.name}`;
+        fileName.className = 'mt-3 text-sm text-blue-600 text-center font-medium';
         
         const reader = new FileReader();
         reader.onload = function(e) {
@@ -112,18 +288,25 @@
 
         if (!response.ok) throw new Error('Conversion failed');
 
-        const blob = await response.blob();
-        const audioUrl = URL.createObjectURL(blob);
+        const data = await response.json();
+        if (!data || !data.url) {
+          alert('No audio URL returned.');
+          return;
+        }
+        const audioUrl = data.url;
         
         // Update audio preview
         audioPreview.src = audioUrl;
+        audioPreview.load();
         previewContainer.style.display = 'block';
+        previewContainer.classList.add('show');
+        audioPreview.scrollIntoView({ behavior: 'smooth', block: 'center' });
         
         // Setup download button
         downloadBtn.onclick = () => {
           const a = document.createElement('a');
           a.href = audioUrl;
-          a.download = 'speech.mp3';
+          a.download = data.fileName || 'speech.mp3';
           document.body.appendChild(a);
           a.click();
           document.body.removeChild(a);
@@ -135,15 +318,147 @@
       }
     });
   </script>
-    <!-- <footer>
-      <div class="footer-container">
-          <p>&copy; 2025 TTS App. All rights reserved.</p>
-          <div class="footer-links">
-              <a href="#">Privacy Policy</a>
-              <a href="#">Terms of Service</a>
-              <a href="#">Contact</a>
-          </div>
+
+  <!-- Speech to Text Section -->
+  <section class="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+    <div class="glass-effect rounded-2xl p-8 shadow-xl hover-lift">
+      <div class="text-center mb-8">
+        <h2 class="text-3xl font-bold gradient-text">Speech to Text</h2>
+        <p class="text-gray-600">Record your voice and get instant transcription in your browser.</p>
       </div>
-  </footer> -->
+
+      <div class="space-y-6">
+        <div class="flex items-center justify-center space-x-4">
+          <button id="sttStart" class="px-6 py-3 bg-blue-600 text-white rounded-xl shadow hover:bg-blue-700 transition">Start Recording</button>
+          <button id="sttStop" class="px-6 py-3 bg-gray-200 text-gray-800 rounded-xl shadow hover:bg-gray-300 transition" disabled>Stop</button>
+          <button id="sttSave" class="px-6 py-3 bg-green-600 text-white rounded-xl shadow hover:bg-green-700 transition" disabled>Download Transcript</button>
+        </div>
+
+        <!-- Upload pre-recorded audio for STT storage/sharing -->
+        <div class="flex items-center justify-center">
+          <label class="flex items-center space-x-3 cursor-pointer">
+            <input id="sttFile" type="file" accept="audio/*" class="hidden">
+            <span class="px-5 py-2 bg-purple-600 text-white rounded-xl shadow hover:bg-purple-700 transition">Attach Audio File</span>
+            <span id="sttFileName" class="text-sm text-gray-600"></span>
+          </label>
+        </div>
+
+        <div class="glass-effect rounded-xl p-4">
+          <label class="block text-sm font-semibold text-gray-700 mb-2">Transcript</label>
+          <textarea id="sttOutput" class="w-full h-40 p-4 bg-white/80 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition text-gray-700" placeholder="Your transcript will appear here..."></textarea>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    // Simple browser-based STT using Web Speech API (Chrome/Edge)
+    const sttStart = document.getElementById('sttStart');
+    const sttStop = document.getElementById('sttStop');
+    const sttSave = document.getElementById('sttSave');
+    const sttOutput = document.getElementById('sttOutput');
+    const sttFile = document.getElementById('sttFile');
+    const sttFileName = document.getElementById('sttFileName');
+
+    let recognition;
+    let isRecording = false;
+    // Lightweight toast helper (no blocking alerts)
+    function showToast(message, type = 'info') {
+      const bg = type === 'error' ? 'bg-red-500' : type === 'success' ? 'bg-emerald-500' : 'bg-gray-800';
+      const el = document.createElement('div');
+      el.className = `fixed top-4 right-4 ${bg} text-white px-4 py-2 rounded-lg shadow-lg z-50`;
+      el.textContent = message;
+      document.body.appendChild(el);
+      setTimeout(() => el.remove(), 3000);
+    }
+
+    try {
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (SpeechRecognition) {
+        recognition = new SpeechRecognition();
+        recognition.continuous = true;
+        recognition.interimResults = true;
+        recognition.lang = 'en-US';
+
+        recognition.onresult = (event) => {
+          let finalText = '';
+          for (let i = event.resultIndex; i < event.results.length; i++) {
+            const transcript = event.results[i][0].transcript;
+            if (event.results[i].isFinal) finalText += transcript + ' ';
+          }
+          sttOutput.value = (sttOutput.value + ' ' + finalText).trim();
+          sttSave.disabled = sttOutput.value.trim().length === 0;
+        };
+
+        recognition.onerror = (e) => {
+          console.error(e);
+          showToast('Speech recognition error: ' + e.error, 'error');
+          sttStart.disabled = false;
+          sttStop.disabled = true;
+        };
+      } else {
+        sttStart.disabled = true;
+        showToast('Speech Recognition API not supported in this browser.', 'error');
+      }
+    } catch (e) {
+      console.error(e);
+      sttStart.disabled = true;
+    }
+
+    sttStart.addEventListener('click', () => {
+      if (!recognition || isRecording) return;
+      recognition.start();
+      isRecording = true;
+      sttStart.disabled = true;
+      sttStop.disabled = false;
+    });
+
+    sttStop.addEventListener('click', () => {
+      if (!recognition || !isRecording) return;
+      recognition.stop();
+      isRecording = false;
+      sttStart.disabled = false;
+      sttStop.disabled = true;
+      sttSave.disabled = sttOutput.value.trim().length === 0;
+    });
+
+    sttSave.addEventListener('click', () => {
+      const text = sttOutput.value.trim();
+      if (!text) return;
+      const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      const ts = new Date().toISOString().replace(/[:.]/g, '-');
+      a.href = url;
+      a.download = `transcript-${ts}.txt`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      showToast('Transcript downloaded.', 'success');
+    });
+
+    // Handle STT audio file upload (store/share)
+    sttFile.addEventListener('change', async (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      sttFileName.textContent = file.name;
+      try {
+        const fd = new FormData();
+        fd.append('audio', file);
+        const res = await fetch('/stt/upload', { method: 'POST', body: fd });
+        if (!res.ok) throw new Error('Upload failed');
+        const data = await res.json();
+        // Append a reference to the transcript box
+        const link = `${location.origin}${data.url}`;
+        sttOutput.value = (sttOutput.value + `\n[Uploaded audio]: ${link}`).trim();
+        sttSave.disabled = sttOutput.value.trim().length === 0;
+        showToast('Audio uploaded.', 'success');
+      } catch (err) {
+        console.error(err);
+        showToast('Failed to upload audio.', 'error');
+      }
+    });
+  </script>
 </body>
 </html>
